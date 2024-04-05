@@ -1,4 +1,4 @@
 # JDG
-<br>Beacon
+Beacon
 <br>Trafficlight(Local)
 <br>Car(RaspberryPi)
