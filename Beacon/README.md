@@ -1,0 +1,3 @@
+# Beacon
+
+Network Information Beacon
