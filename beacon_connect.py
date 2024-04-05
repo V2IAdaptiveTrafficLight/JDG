@@ -19,10 +19,15 @@ class BeaconDelegate(DefaultDelegate):
                     # 16진수를 ASCII문자열로 변환하여 SSID와 패스워드 출력
                     ssid = ''.join([chr(int(ssid_hex[i:i+2], 16)) for i in range(0, len(ssid_hex), 2)])
                     password = ''.join([chr(int(password_hex[i:i+2], 16)) for i in range(0, len(password_hex), 2)])
+                    
+                    # 문자열 띄어쓰기 제거
+                    ssid = ssid.replace(" ", "")
+                    password = password.replace(" ", "")
+                    
                     return [ssid, password]
 
 if __name__ == "__main__":
     scanner = Scanner().withDelegate(BeaconDelegate())
     scanner.start()
-    scanner.process(timeout=3)  # 3초 동안 스캔
+    scanner.process(timeout=3)  # 10초 동안 스캔
     scanner.stop()
