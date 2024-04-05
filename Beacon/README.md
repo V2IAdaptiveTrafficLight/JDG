@@ -1,6 +1,6 @@
 ## Log
-1. Beacon setup 2024-04-03
-2. EddyStone URL Beacon automotive start 2024-04-04
+1. Beacon 기본 세팅 2024-04-03
+2. EddyStone URL Beacon WiFi 정보 담고 자동 실행 2024-04-04
 
 ## Before Start
 ### EddyStone URL Command Calculator
