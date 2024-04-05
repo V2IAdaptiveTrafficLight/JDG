@@ -1,3 +1,4 @@
 ## Log
-1. Beacon WiFi Connect 2024-04-04
-2. Beacon Wifi Connect Adaptively 2024-04-05
+1. WiFi 정보 주어질 때 연결 2024-04-04
+2. Beacon으로부터 정보 받고 Wifi 연결 2024-04-05
+3. 지역에 따른 다른 Wifi 능동적인 연결 2024-04-05
