@@ -6,9 +6,9 @@ import datetime
 def recv_data(client_socket):
     while True:
         data = client_socket.recv(1024)
-        r_time = datetime.datetime.now()
+        r_time = datetime.datetime.now().strftime("%H:%M:%S")
         r_data = pickle.loads(data)
-        print("receive : {}, receive_time: {}".format(r_data, r_time))
+        print(f">> HOST의 message : {r_data} ({r_time})")
 
 #TCP 연결
 def connect_TCP(HOST, PORT):
@@ -21,11 +21,13 @@ def connect_TCP(HOST, PORT):
     
     while True:
         message = input()
-        data = pickle.dumps([message])
+
         if message == 'quit':
             close_data = message
             break
-
+        
+        s_time = datetime.datetime.now().strftime("%H:%M:%S")
+        data = pickle.dumps([message, s_time])
         client_socket.sendall(data)
 
     client_socket.close()
