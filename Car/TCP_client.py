@@ -1,17 +1,19 @@
 import socket
 import threading
 import pickle
+import datetime
 
 def recv_data(client_socket):
     while True:
         data = client_socket.recv(1024)
-        print("recive : ", pickle.loads(data))
+        r_time = datetime.datetime.now()
+        r_data = pickle.loads(data)
+        print("receive : {}, receive_time: {}".format(r_data, r_time))
 
 #TCP 연결
 def connect_TCP(HOST, PORT):
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((HOST, PORT))
-    print("hi")
     
     recv_thread = threading.Thread(target=recv_data, args=(client_socket,))
     recv_thread.start()
