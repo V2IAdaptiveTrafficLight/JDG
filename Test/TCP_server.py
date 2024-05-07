@@ -12,6 +12,7 @@ HOST = socket.gethostbyname(socket.gethostname())
 PORT1 = 9999  # broadcast port
 PORT2 = 8261  # tcp 연결을 위한 port
 
+s_data = {'left' : 0, 'plus' : 0}
 
 def broadcast_UDP():
     while True:
@@ -32,17 +33,25 @@ def broadcast_UDP():
 
 # 클라이언트 메시지 받는 스레드
 def server_message_receive(client_socket, addr):
+    global s_data
+
     print(f'>> {addr[0]}({addr[1]})와 연결완료.')
 
     while True:
-        data = client_socket.recv(1024)jdg
+        data = client_socket.recv(1024)
 
         if not data or pickle.loads(data)[0] == 'quit':
             print(f'>> {addr[0]}({addr[1]})와 연결해제.')
             break
 
         r_time = datetime.datetime.now().strftime("%H:%M:%S")
-        print(f'>> {addr[0]}({addr[1]})의 message : {pickle.loads(data)} ({r_time})')
+        r_data = pickle.loads(data)
+
+        print(f'>> {addr[0]}({addr[1]})의 message : {r_data} ({r_time})')
+
+        if(r_data[0]['pass'] == 1):
+            s_data['left'] = 12
+            s_data['plus'] = 10
 
     client_socket.close()
     client_sockets[:] = [c for c in client_sockets if c != client_socket]
@@ -50,8 +59,8 @@ def server_message_receive(client_socket, addr):
 
 # 서버에서 메시지 입력하는 경우
 def server_message_input():
+    global s_data
     while True:
-        message = input()
         send_message_to_clients(message)  # 입력된 메시지를 모든 클라이언트에게 전송
 
 
