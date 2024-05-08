@@ -12,7 +12,9 @@ HOST = socket.gethostbyname(socket.gethostname())
 PORT1 = 9999  # broadcast port
 PORT2 = 8261  # tcp 연결을 위한 port
 
-s_data = {'left' : 0, 'plus' : 0}
+s_data = {'remain': 0, 'plus': 0}
+
+right = 0   #차량이 우회전 하는지 안하는지 flag
 
 def broadcast_UDP():
     while True:
@@ -33,25 +35,18 @@ def broadcast_UDP():
 
 # 클라이언트 메시지 받는 스레드
 def server_message_receive(client_socket, addr):
-    global s_data
-
     print(f'>> {addr[0]}({addr[1]})와 연결완료.')
 
     while True:
+        global s_data, right
         data = client_socket.recv(1024)
-
-        if not data or pickle.loads(data)[0] == 'quit':
-            print(f'>> {addr[0]}({addr[1]})와 연결해제.')
-            break
 
         r_time = datetime.datetime.now().strftime("%H:%M:%S")
         r_data = pickle.loads(data)
+        print(f">> {addr[0]}({addr[1]})의 message : {r_data} ({r_time})")
 
-        print(f'>> {addr[0]}({addr[1]})의 message : {r_data} ({r_time})')
-
-        if(r_data[0]['pass'] == 1):
-            s_data['left'] = 12
-            s_data['plus'] = 10
+        if r_data[0]['pass'] == '1':    #우회전 한다고 표시
+            right = 1    #right 변수 1로 설정
 
     client_socket.close()
     client_sockets[:] = [c for c in client_sockets if c != client_socket]
@@ -59,17 +54,22 @@ def server_message_receive(client_socket, addr):
 
 # 서버에서 메시지 입력하는 경우
 def server_message_input():
-    global s_data
     while True:
-        send_message_to_clients(message)  # 입력된 메시지를 모든 클라이언트에게 전송
+        global right
+
+        if right == 1:  #우회전 하는 상황일때 차량에게 패킷 전송
+            send_message_to_clients()  # 입력된 메시지를 모든 클라이언트에게 전송
+            right = 0   #다시 right 0으로 초기화 시켜야 오류가 안생김 (즉 지속적으로 차량은 우회전하는 신호를 계속 줘야함)
 
 
 # 서버와 연결된 모든 클라이언트에게 메시지 전달
-def send_message_to_clients(message):
+def send_message_to_clients():
     with client_sockets_lock:
+        global s_data
+
         for client in client_sockets:
             s_time = datetime.datetime.now().strftime("%H:%M:%S")
-            data = pickle.dumps([message, s_time])
+            data = pickle.dumps([s_data, s_time])
             client.sendall(data)
 
 
