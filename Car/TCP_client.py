@@ -3,12 +3,14 @@ import threading
 import pickle
 import datetime
 
+s_data = {'pass' : 0} #우회전 유무 패킷
+
 def recv_data(client_socket):
     while True:
         data = client_socket.recv(1024)
         r_time = datetime.datetime.now().strftime("%H:%M:%S")
         r_data = pickle.loads(data)
-        print(f">> HOST의 message : {r_data} ({r_time})")
+        print(f"\n>> HOST의 message : {r_data} ({r_time})")
 
 #TCP 연결
 def connect_TCP(HOST, PORT):
@@ -20,14 +22,14 @@ def connect_TCP(HOST, PORT):
     print('>> Connect Server')
     
     while True:
-        message = input()
-
-        if message == 'quit':
-            close_data = message
-            break
+        global s_data
+        
+        pass_v = input("Enter value for pass : ")   #건너는 유무 판단 - 추후 버튼으로 수정
+        
+        s_data['pass'] = pass_v
         
         s_time = datetime.datetime.now().strftime("%H:%M:%S")
-        data = pickle.dumps([message, s_time])
+        data = pickle.dumps([s_data, s_time])
         client_socket.sendall(data)
 
     client_socket.close()
