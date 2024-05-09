@@ -6,3 +6,4 @@
 <br> (Beacon_Network_Connect.py, TCP_client.py 한 폴더에) 2024-05-03
 5. receive data time 추가 2024-05-04
 6. 신호등으로 packet 형태의 데이터 전송 (딕셔너리 이용) 2024-05-08
+7. button(우회전 깜박이) 기능 추가 2024-05-09
