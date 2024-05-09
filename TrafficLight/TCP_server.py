@@ -39,13 +39,19 @@ def server_message_receive(client_socket, addr):
 
     while True:
         global s_data, right
+
+        time.sleep(0.1)
         data = client_socket.recv(1024)
+
+        if not data or pickle.loads(data)[0] == 'quit':
+            print(f'>> {addr[0]}({addr[1]})와 연결해제.')
+            break
 
         r_time = datetime.datetime.now().strftime("%H:%M:%S")
         r_data = pickle.loads(data)
         print(f">> {addr[0]}({addr[1]})의 message : {r_data} ({r_time})")
 
-        if r_data[0]['pass'] == '1':    #우회전 한다고 표시
+        if r_data[0]['pass'] == 1:    #우회전 한다고 표시
             right = 1    #right 변수 1로 설정
 
     client_socket.close()
