@@ -19,16 +19,30 @@ def recv_data(client_socket):
         data = client_socket.recv(1024)
         r_time = datetime.datetime.now().strftime("%H:%M:%S")
         r_data = pickle.loads(data)
-        print(f">> HOST의 message : {r_data} ({r_time})")
+        
+        if r_data[0] != "1":
+            print(f">> HOST의 message : {r_data} ({r_time})")
+            print(f">> 남은 시간 : {r_data[0]['remain']}")
+        
+            if r_data[0]['plus'] != 0:
+                print(f">> 추가된 시간 : {r_data[0]['plus']}")
+        
+            if r_data[0]['remain'] == 1:
+                print(">> Pass the Crosswalk !!")
 
 def send_signal():
     while True:
         global right
         
         if GPIO.input(15) == GPIO.HIGH:
-            time.sleep(0.1)
+            if right == 0:
+                print(">> 우회전 버튼 On\n")
+            else:
+                print(">> 우회전 버튼 Off\n")
+                
             right = not right
-        time.sleep(0.1)
+
+        time.sleep(0.5)
 
 #TCP 연결
 def connect_TCP(HOST, PORT):
@@ -37,12 +51,12 @@ def connect_TCP(HOST, PORT):
     
     recv_thread = threading.Thread(target=recv_data, args=(client_socket,))
     recv_thread.start()
-    print('>> Connect Server')
+    print('>> Connect Server\n')
     
     while True:
         global s_data, right
         
-        time.sleep(0.1)    
+        time.sleep(1)    
         if right == True:
             s_data['pass'] = int(right)
         
