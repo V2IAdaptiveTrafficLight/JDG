@@ -2,9 +2,7 @@ from bluepy.btle import Scanner, DefaultDelegate, BTLEDisconnectError
 import subprocess
 import time
 
-global temp
 temp = "a"
-global flag
 flag = False
 
 class BeaconDelegate(DefaultDelegate):
@@ -27,7 +25,6 @@ class BeaconDelegate(DefaultDelegate):
                     # 16진수를 ASCII문자열로 변환하여 SSID와 패스워드 추출
                     ssid = ''.join([chr(int(ssid_hex[i:i+2], 16)) for i in range(0, len(ssid_hex), 2)])
                     password = ''.join([chr(int(password_hex[i:i+2], 16)) for i in range(0, len(password_hex), 2)])
-                    print(ssid, password)
                     
                     if(temp != ssid):
                         temp = ssid
